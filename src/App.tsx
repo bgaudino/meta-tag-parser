@@ -3,11 +3,12 @@ import { Container, Grid, TextField, Typography } from "@mui/material";
 import { parseMetadata } from "./utils/parseXML";
 import MetaTagTable from "./components/MetaTagTable";
 import Errors from "./components/Errors";
+import { ParserError, Metadata } from "./types";
 
 function App() {
   const [xml, setXml] = useState("");
-  const [data, setData] = useState<any>([]);
-  const [error, setError] = useState<any>([]);
+  const [data, setData] = useState<Metadata[]>([]);
+  const [error, setError] = useState<ParserError | null>(null);
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setXml(e.target.value);

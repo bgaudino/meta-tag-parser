@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Metadata } from "../types";
 import {
   Table,
   TableBody,
@@ -10,10 +11,6 @@ import {
   styled,
 } from "@mui/material";
 
-interface Metadata {
-  property: string;
-  content: string;
-}
 interface TableProps {
   data: Metadata[];
 }

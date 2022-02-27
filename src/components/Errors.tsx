@@ -1,15 +1,7 @@
 import { Alert, Typography } from "@mui/material";
+import { ParserError } from "../types";
 
-interface ErrorProps {
-  error: {
-    code: string;
-    msg: string;
-    line?: number;
-    column?: number;
-  };
-}
-
-export default function Errors({ error }: ErrorProps) {
+export default function Errors({ error }: { error: ParserError }) {
   return (
     <>
       <Typography variant="h6" gutterBottom>
