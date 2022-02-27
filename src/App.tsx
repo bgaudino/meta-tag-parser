@@ -19,12 +19,12 @@ function App() {
     if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
 
     // Handle XML parsing
-    if (!e.target.value) {
+    if (!value) {
       setData([]);
       setError(null);
       return;
     }
-    const parsed = parseMetadata(e.target.value);
+    const parsed = parseMetadata(value);
     setData(parsed.data);
 
     // Debounce displaying errors as user types
