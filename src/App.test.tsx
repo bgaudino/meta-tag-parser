@@ -1,5 +1,5 @@
 import React from "react";
-import { parseXML } from "./utils/parseXML";
+import { parseMetadata } from "./utils/parseXML";
 
 const EPUB3 = `
 <metadata>
@@ -13,24 +13,6 @@ const EPUB3 = `
 </metadata>
 `;
 
-const EPUB3Result = [
-  {
-    tag: "meta",
-    property: "certifiedBy",
-    content: "Dewey, Checkett and Howe",
-  },
-  {
-    tag: "meta",
-    property: "certifierCredential",
-    content: "Certifiably Accessible",
-  },
-  {
-    tag: "link",
-    property: "certifierReport",
-    content: "https://example.com/reports/a11y/pub.html",
-  },
-];
-
 const EPUB2 = `
 <metadata>
   <meta name="dcterms:conformsTo"
@@ -43,30 +25,27 @@ const EPUB2 = `
 </metadata>
 `;
 
-const EPUB2Result = [
+const result = [
   {
-    tag: "meta",
     property: "certifiedBy",
     content: "Dewey, Checkett and Howe",
   },
   {
-    tag: "meta",
     property: "certifierCredential",
     content: "Certifiably Accessible",
   },
   {
-    tag: "meta",
     property: "certifierReport",
     content: "https://example.com/reports/a11y/pub.html",
   },
 ];
 
 test("parse EPUB3 XML", () => {
-  const xml = parseXML(EPUB3);
-  expect(xml.data).toEqual(EPUB3Result);
+  const xml = parseMetadata(EPUB3);
+  expect(xml.data).toEqual(result);
 });
 
 test("parse EPUB2 XML", () => {
-  const xml = parseXML(EPUB2);
-  expect(xml.data).toEqual(EPUB2Result);
+  const xml = parseMetadata(EPUB2);
+  expect(xml.data).toEqual(result);
 });

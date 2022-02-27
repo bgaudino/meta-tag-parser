@@ -1,27 +1,30 @@
-export function parseXML(xmlString: string) {
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+import { XMLParser, XMLValidator } from "fast-xml-parser";
 
-  // Check for errors
-  const parsererrorTag = Array.from(xmlDoc.getElementsByTagName("parsererror"));
-  const errors = parsererrorTag.map((tag) => {
-    const error = tag.getElementsByTagName("div")[0].innerText.split(":");
-    return {
-      key: error[0],
-      value: error[1],
-    };
-  });
+function getTags(tags: any) {
+  if (!tags) return [];
+  return tags.length > 0 ? tags : [tags];
+}
 
-  // Look for metadata tag
-  const metadata = xmlDoc.getElementsByTagName("metadata")[0];
+export function parseMetadata(xmlString: string) {
+  const options = {
+    ignoreAttributes: false,
+  };
+  const parser = new XMLParser(options);
+  const isValid = XMLValidator.validate(xmlString);
+  const error = isValid !== true ? isValid.err : null;
 
-  // If metadata tag search children, otherwise search for meta and link tags
-  const tags = metadata
-    ? Array.from(metadata.children)
-    : [
-        ...Array.from(xmlDoc.getElementsByTagName("meta")),
-        ...Array.from(xmlDoc.getElementsByTagName("link")),
-      ];
+  const parsed = parser.parse(xmlString);
+
+  // Search for meta and link tags in metadata and head tags or in root
+  const tags = [
+    parsed.metadata?.meta,
+    parsed.metadata?.link,
+    parsed.head?.meta,
+    parsed.head?.link,
+    parsed.meta,
+    parsed.link,
+  ];
+  const metaTags = tags.reduce((acc, curr) => acc.concat(getTags(curr)), []);
 
   // Find tags with a11y prefix in property or name attribute
   // or conformance property since the a11y prefix is not techincally required
@@ -30,45 +33,29 @@ export function parseXML(xmlString: string) {
     "certifierCredential",
     "certifierReport",
   ];
-  const a11y = tags.filter((tag) => {
-    const attributes = [
-      tag.getAttribute("property"),
-      tag.getAttribute("name"),
-      tag.getAttribute("rel"),
-    ];
+  const a11yTags = metaTags.filter((tag: {
+    [key: string]: any;
+  }) => {
+    const attributes = [tag["@_property"], tag["@_name"], tag["@_rel"]];
     return attributes.some(
-      (attr) => attr?.startsWith("a11y") || conformanceProperties.includes(attr || "")
+      (attr) =>
+        attr?.startsWith("a11y:") || conformanceProperties.includes(attr || "")
     );
   });
 
   // Convert to array of objects
-  const data = a11y.map((tag) => {
-    if (tag.tagName === "meta") {
-      const property = tag.getAttribute("property") || tag.getAttribute("name");
-      const content = tag.textContent || tag.getAttribute("content");
-      if (property)
-        return {
-          tag: "meta",
-          property: property.replace("a11y:", ""),
-          content,
-        };
-    }
-    if (tag.tagName === "link") {
-      const property = tag.getAttribute("rel");
-      const content = tag.getAttribute("href");
-      if (property)
-        return {
-          tag: "link",
-          property: property.replace("a11y:", ""),
-          content,
-        };
-    }
-    return { property: "", content: "" };
+  const tagData = a11yTags.map((tag: {
+    [key: string]: any;
+  }) => {
+    const property = tag["@_property"] || tag["@_name"] || tag["@_rel"];
+    const content = tag["#text"] || tag["@_href"] || tag["@_content"];
+    return {
+      property: property.replace("a11y:", ""),
+      content,
+    };
   });
-
   return {
-    data,
-    errors,
-    success: errors.length === 0,
+    data: tagData,
+    error,
   };
 }

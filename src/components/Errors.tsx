@@ -1,16 +1,23 @@
 import { Alert, Typography } from "@mui/material";
 
-export default function Errors({ errors }: any) {
+interface ErrorProps {
+  error: {
+    code: string;
+    msg: string;
+    line?: number;
+    column?: number;
+  };
+}
+
+export default function Errors({ error }: ErrorProps) {
   return (
     <>
       <Typography variant="h6" gutterBottom>
-        Errors
+        Error
       </Typography>
-      {errors.map((error: any, index: number) => (
-        <Alert key={index} severity="error">
-          <strong>{error.key}:</strong> {error.value}
-        </Alert>
-      ))}
+      <Alert severity="error">
+        <strong>{error.code}:</strong> {error.msg}
+      </Alert>
     </>
   );
 }
