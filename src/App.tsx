@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Container, Grid, TextField, Typography } from "@mui/material";
 import { parseMetadata } from "./utils/parseXML";
 import MetaTagTable from "./components/MetaTagTable";
@@ -9,12 +9,22 @@ function App() {
   const [xml, setXml] = useState("");
   const [data, setData] = useState<Metadata[]>([]);
   const [error, setError] = useState<ParserError | null>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setXml(e.target.value);
-    const parsed = parseMetadata(e.target.value);
-    setData(parsed.data);
-    setError(parsed.error);
+    const { value } = e.target;
+    setXml(value);
+    if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    if (!e.target.value) {
+      setData([]);
+      setError(null);
+      return;
+    }
+    timeoutRef.current = window.setTimeout(() => {
+      const parsed = parseMetadata(e.target.value);
+      setData(parsed.data);
+      setError(parsed.error);
+    }, 300);
   }
 
   return (
