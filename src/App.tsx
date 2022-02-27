@@ -1,7 +1,16 @@
+import { useState } from "react";
 import { Container, Grid, TextField, Typography } from "@mui/material";
+import { parseXML } from "./utils/parseXML";
 import MetaTagTable from "./components/MetaTagTable";
 
 function App() {
+  const [xml, setXml] = useState("");
+
+  function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setXml(e.target.value);
+    const parsed = parseXML(e.target.value);
+  }
+
   return (
     <Container>
       <Typography
@@ -20,6 +29,8 @@ function App() {
             fullWidth
             label="XML"
             variant="outlined"
+            value={xml}
+            onChange={handleChange}
           />
         </Grid>
         <Grid item xs={12} md={6}>
