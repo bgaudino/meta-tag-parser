@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
+  styled,
 } from "@mui/material";
 
 interface Metadata {
@@ -23,6 +24,10 @@ type sortDirection = "asc" | "desc";
 type fields = sortField[];
 
 const headers: fields = ["property", "content"];
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  backgroundColor: theme.palette.info.light,
+}));
 
 export default function MetaTagTable({ data }: TableProps) {
   const [sortField, setSortField] = useState<sortField>("property");
@@ -57,7 +62,7 @@ export default function MetaTagTable({ data }: TableProps) {
     <TableContainer>
       <Table>
         <TableHead>
-          <TableRow>
+          <StyledTableRow>
             {headers.map((field: sortField) => (
               <TableCell key={field}>
                 <TableSortLabel
@@ -73,7 +78,7 @@ export default function MetaTagTable({ data }: TableProps) {
                 </TableSortLabel>
               </TableCell>
             ))}
-          </TableRow>
+          </StyledTableRow>
         </TableHead>
         <TableBody>
           {sortedData.map((row: Metadata) => (
