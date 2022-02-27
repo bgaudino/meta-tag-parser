@@ -2,15 +2,18 @@ import { useState } from "react";
 import { Container, Grid, TextField, Typography } from "@mui/material";
 import { parseXML } from "./utils/parseXML";
 import MetaTagTable from "./components/MetaTagTable";
+import Errors from "./components/Errors";
 
 function App() {
   const [xml, setXml] = useState("");
   const [data, setData] = useState<any>([]);
+  const [errors, setErrors] = useState<any>([]);
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setXml(e.target.value);
     const parsed = parseXML(e.target.value);
     setData(parsed.data);
+    setErrors(parsed.errors);
   }
 
   return (
@@ -38,6 +41,11 @@ function App() {
         <Grid item xs={12} md={6}>
           <MetaTagTable data={data} />
         </Grid>
+        {errors.length > 0 && (
+          <Grid item xs={12} md={6}>
+            <Errors errors={errors} />
+          </Grid>
+        )}
       </Grid>
     </Container>
   );
