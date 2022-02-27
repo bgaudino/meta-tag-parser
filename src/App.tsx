@@ -20,11 +20,14 @@ function App() {
       setError(null);
       return;
     }
-    timeoutRef.current = window.setTimeout(() => {
-      const parsed = parseMetadata(e.target.value);
-      setData(parsed.data);
-      setError(parsed.error);
-    }, 300);
+    const parsed = parseMetadata(e.target.value);
+    setData(parsed.data);
+    timeoutRef.current = window.setTimeout(
+      () => {
+        setError(parsed.error);
+      },
+      parsed.error ? 300 : 0
+    );
   }
 
   return (
