@@ -18,12 +18,18 @@ export function parseMetadata(xmlString: string) {
   try {
     const parsed = parser.parse(xmlString);
 
-    // Search for meta and link tags in metadata and head tags or in root
+    // Search for meta tags in possible parent nodes and in root
     const tags = [
-      parsed.metadata?.meta,
-      parsed.metadata?.link,
+      parsed.html?.head?.meta,
+      parsed.html?.head?.link,
+      parsed.package?.metadata?.meta,
+      parsed.package?.metadata?.link,
+      parsed.ncx?.head?.meta,
+      parsed.ncx?.head?.link,
       parsed.head?.meta,
       parsed.head?.link,
+      parsed.metadata?.meta,
+      parsed.metadata?.link,
       parsed.meta,
       parsed.link,
     ];
