@@ -81,8 +81,8 @@ export default function MetaTagTable({ data }: TableProps) {
           </StyledTableRow>
         </TableHead>
         <TableBody>
-          {sortedData.map((row: Metadata) => (
-            <TableRow key={row.property} hover>
+          {sortedData.map((row: Metadata, index: number) => (
+            <TableRow key={index} hover>
               <TableCell>{row.property}</TableCell>
               <TableCell>{row.content}</TableCell>
             </TableRow>
