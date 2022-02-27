@@ -41,7 +41,7 @@ function App() {
         <Grid item xs={12} md={6}>
           <MetaTagTable data={data} />
         </Grid>
-        {errors.length > 0 && (
+        {xml.trim() && errors.length > 0 && (
           <Grid item xs={12} md={6}>
             <Errors errors={errors} />
           </Grid>
