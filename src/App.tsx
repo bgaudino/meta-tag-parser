@@ -14,7 +14,11 @@ function App() {
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const { value } = e.target;
     setXml(value);
+
+    // Clear previous timeout
     if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+
+    // Handle XML parsing
     if (!e.target.value) {
       setData([]);
       setError(null);
@@ -22,10 +26,10 @@ function App() {
     }
     const parsed = parseMetadata(e.target.value);
     setData(parsed.data);
+
+    // Debounce displaying errors as user types
     timeoutRef.current = window.setTimeout(
-      () => {
-        setError(parsed.error);
-      },
+      () => setError(parsed.error),
       parsed.error ? 300 : 0
     );
   }

@@ -11,6 +11,8 @@ export function parseMetadata(xmlString: string) {
   };
   const parser = new XMLParser(options);
   const isValid = XMLValidator.validate(xmlString);
+  // fast-xml-parser returns true if the xml is valid
+  // and an object with the key "err" if it is not
   const error = isValid !== true ? isValid.err : null;
 
   try {
