@@ -11,9 +11,9 @@ function App() {
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setXml(e.target.value);
-    const library = parseMetadata(e.target.value);
-    setData(library.data);
-    setError(library.error);
+    const parsed = parseMetadata(e.target.value);
+    setData(parsed.data);
+    setError(parsed.error);
   }
 
   return (
