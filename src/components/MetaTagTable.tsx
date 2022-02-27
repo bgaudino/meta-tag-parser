@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 
 interface Metadata {
-  tag: string;
   property: string;
   content: string;
 }
