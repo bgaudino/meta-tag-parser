@@ -30,7 +30,7 @@ function App() {
           <TextField
             autoFocus
             multiline
-            rows={10}
+            rows={12}
             fullWidth
             label="XML"
             variant="outlined"
