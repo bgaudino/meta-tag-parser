@@ -7,7 +7,16 @@ import {
   TableRow,
 } from "@mui/material";
 
-export default function MetaTagTable() {
+interface TableRow {
+  tag: string;
+  property: string;
+  content: string;
+}
+interface TableProps {
+  data: TableRow[];
+}
+
+export default function MetaTagTable({ data }: TableProps) {
   return (
     <TableContainer>
       <Table>
@@ -18,10 +27,12 @@ export default function MetaTagTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <TableCell>Content</TableCell>
-            <TableCell>Property</TableCell>
-          </TableRow>
+          {data.map((row: TableRow) => (
+            <TableRow key={row.property} hover>
+              <TableCell>{row.property}</TableCell>
+              <TableCell>{row.content}</TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

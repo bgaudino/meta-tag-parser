@@ -5,10 +5,12 @@ import MetaTagTable from "./components/MetaTagTable";
 
 function App() {
   const [xml, setXml] = useState("");
+  const [data, setData] = useState<any>([]);
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setXml(e.target.value);
     const parsed = parseXML(e.target.value);
+    setData(parsed.data);
   }
 
   return (
@@ -34,7 +36,7 @@ function App() {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <MetaTagTable />
+          <MetaTagTable data={data} />
         </Grid>
       </Grid>
     </Container>
