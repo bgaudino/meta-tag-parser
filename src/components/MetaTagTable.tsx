@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -5,29 +6,77 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
 } from "@mui/material";
 
-interface TableRow {
+interface Metadata {
   tag: string;
   property: string;
   content: string;
 }
 interface TableProps {
-  data: TableRow[];
+  data: Metadata[];
 }
 
+type sortField = "property" | "content";
+type sortDirection = "asc" | "desc";
+type fields = sortField[];
+
+const headers: fields = ["property", "content"];
+
 export default function MetaTagTable({ data }: TableProps) {
+  const [sortField, setSortField] = useState<sortField>("property");
+  const [sortDirection, setSortDirection] = useState<sortDirection>("asc");
+
+  function handleSort(field: sortField) {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  }
+
+  function sortData(data: Metadata[]) {
+    const sorted = [...data];
+    sorted.sort((a, b) => {
+      if (a[sortField]?.toLowerCase() > b[sortField]?.toLowerCase()) {
+        return sortDirection === "asc" ? 1 : -1;
+      }
+      if (a[sortField]?.toLowerCase() < b[sortField]?.toLowerCase()) {
+        return sortDirection === "asc" ? -1 : 1;
+      }
+      return 0;
+    });
+    return sorted;
+  }
+
+  const sortedData = sortData(data);
+
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Property</TableCell>
-            <TableCell>Content</TableCell>
+            {headers.map((field: sortField) => (
+              <TableCell key={field}>
+                <TableSortLabel
+                  active={sortField === field}
+                  direction={sortField === field ? sortDirection : "asc"}
+                  onClick={() => handleSort(field)}
+                  hideSortIcon={sortField !== field}
+                  sx={{
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {field}
+                </TableSortLabel>
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row: TableRow) => (
+          {sortedData.map((row: Metadata) => (
             <TableRow key={row.property} hover>
               <TableCell>{row.property}</TableCell>
               <TableCell>{row.content}</TableCell>
